@@ -50,9 +50,9 @@ const handleLogin = async(req, res) => {
         //console.log(roles.includes(ROLES_LIST.admin))
     if (roles.includes(ROLES_LIST.admin)) isAdmin = true
 
-    const accessToken = jwt.sign({ "email": theUser.email, "roles": roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+    const accessToken = jwt.sign({ "email": theUser.email, "roles": roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
 
-    const newRefreshToken = jwt.sign({ "email": theUser.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+    const newRefreshToken = jwt.sign({ "email": theUser.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
     newRefreshTokenArray.push(newRefreshToken)
     const result = await User.updateOne({ email: theUser.email }, { refreshToken: newRefreshTokenArray }) //if we want multiple refresh token and multiple device login we make the refresh token as array in the database and handle it as array
@@ -125,9 +125,9 @@ const handleRefreshToken = async(req, res) => {
         if (err || foundUser.email !== decoded.email) return res.sendStatus(403)
         const roles = Object.values(foundUser.roles)
         const accessToken = jwt.sign({ "email": foundUser.email, "roles": roles },
-            process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+            process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
 
-        const newRefreshToken = jwt.sign({ "email": foundUser.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' }); // generate another refresh token and save it to db so the old one wont be accepted 
+        const newRefreshToken = jwt.sign({ "email": foundUser.email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); // generate another refresh token and save it to db so the old one wont be accepted 
 
         newRefreshTokenArray.push(newRefreshToken)
 
