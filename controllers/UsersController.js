@@ -92,7 +92,6 @@ const handleLogout = async(req, res) => {
 
 const handleRefreshToken = async(req, res) => {
     const cookies = req.cookies
-    console.log(cookies)
     if (!cookies || !cookies.jwt) return res.sendStatus(401)
     const refreshToken = cookies.jwt
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true }) //clear the cookies and prepare it for new one if the provided is valid
@@ -133,7 +132,7 @@ const handleRefreshToken = async(req, res) => {
         newRefreshTokenArray.push(newRefreshToken)
 
         await User.updateOne({ email: decoded.email }, { refreshToken: newRefreshTokenArray }); //if we want multiple refresh token and multiple device login we make the refresh token as array in the database and handle it as array
-        res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, maxAge: 24 * 60 * 60 * 1000 }) //return the new one to the client cookies 
+        res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 }) //return the new one to the client cookies 
 
         res.json({
             accessToken,
