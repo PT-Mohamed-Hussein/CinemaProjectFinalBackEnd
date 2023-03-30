@@ -56,7 +56,7 @@ const handleLogin = async(req, res) => {
 
     newRefreshTokenArray.push(newRefreshToken)
     const result = await User.updateOne({ email: theUser.email }, { refreshToken: newRefreshTokenArray }) //if we want multiple refresh token and multiple device login we make the refresh token as array in the database and handle it as array
-    res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 }) //remove secure for thunder client to be able to test 
+    res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 }) //remove secure for thunder client to be able to test 
         .json({
             accessToken,
             isAdmin,
