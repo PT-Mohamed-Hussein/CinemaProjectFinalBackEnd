@@ -92,6 +92,7 @@ const handleLogout = async(req, res) => {
 
 const handleRefreshToken = async(req, res) => {
     const cookies = req.cookies
+    console.log(cookies)
     if (!cookies || !cookies.jwt) return res.sendStatus(401)
     const refreshToken = cookies.jwt
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true }) //clear the cookies and prepare it for new one if the provided is valid
